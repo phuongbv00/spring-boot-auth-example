@@ -2,6 +2,7 @@ package io.github.censodev.springbootauthexample;
 
 import io.github.censodev.jwtprovider.JwtProvider;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,11 +16,12 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @Slf4j
 public class SecurityConfig {
+    @Value("${auth.secret}")
+    private String authSecret;
+
     @Bean
     public JwtProvider tokenProvider() {
-        return JwtProvider.builder()
-                .secret("qwertyuiopasdfghjklzxcvbnm1234567890!@#$%^&*()")
-                .build();
+        return JwtProvider.secret(authSecret).build();
     }
 
     @Bean

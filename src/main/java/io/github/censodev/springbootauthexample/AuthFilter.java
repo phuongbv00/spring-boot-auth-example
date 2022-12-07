@@ -3,6 +3,7 @@ package io.github.censodev.springbootauthexample;
 import io.github.censodev.jwtprovider.CanAuth;
 import io.github.censodev.jwtprovider.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,14 +26,14 @@ public class AuthFilter<T extends CanAuth> implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String header = ((HttpServletRequest) request).getHeader(tokenProvider.getHeader());
+        String header = ((HttpServletRequest) request).getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (header == null || !header.startsWith(tokenProvider.getPrefix())) {
+        if (header == null || !header.startsWith("Bearer ")) {
             chain.doFilter(request, response);
             return;
         }
 
-        String token = header.replace(tokenProvider.getPrefix(), "");
+        String token = header.replace("Bearer ", "");
         try {
             tokenProvider.verify(token);
             T canAuthConcrete = tokenProvider.getCredential(token, canAuthConcreteClass);
