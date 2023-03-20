@@ -54,7 +54,7 @@ class SpringBootAuthExampleApplicationTests {
         assertEquals(HttpStatus.OK, loginRes.getStatusCode());
 
         // get access token after login
-        AuthService.Tokens tokens = objectMapper.readValue(loginRes.getBody(), AuthService.Tokens.class);
+        Tokens tokens = objectMapper.readValue(loginRes.getBody(), Tokens.class);
         assertNotNull(tokens.getRefreshToken());
         String accessToken = tokens.getAccessToken();
 
